@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace HiperMariko3D {
 
 	using namespace System;
@@ -41,15 +40,20 @@ namespace HiperMariko3D {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::PictureBox^  pictureBox1;
-	private: System::Windows::Forms::PictureBox^  pictureBox2;
+	private: System::Windows::Forms::PictureBox^  backGround;
+	protected: 
+
+	private: System::Windows::Forms::PictureBox^  actor;
+	private: System::Windows::Forms::Timer^  timerMotion;
+	private: System::ComponentModel::IContainer^  components;
+
 	protected: 
 
 	private:
 		/// <summary>
 		/// 必要なデザイナ変数です。
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -58,28 +62,36 @@ namespace HiperMariko3D {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->BeginInit();
+			this->components = (gcnew System::ComponentModel::Container());
+			this->backGround = (gcnew System::Windows::Forms::PictureBox());
+			this->actor = (gcnew System::Windows::Forms::PictureBox());
+			this->timerMotion = (gcnew System::Windows::Forms::Timer(this->components));
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// pictureBox1
+			// backGround
 			// 
-			this->pictureBox1->Location = System::Drawing::Point(12, 12);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(560, 338);
-			this->pictureBox1->TabIndex = 0;
-			this->pictureBox1->TabStop = false;
+			this->backGround->Location = System::Drawing::Point(12, 12);
+			this->backGround->Name = L"backGround";
+			this->backGround->Size = System::Drawing::Size(560, 338);
+			this->backGround->TabIndex = 0;
+			this->backGround->TabStop = false;
 			// 
-			// pictureBox2
+			// actor
 			// 
-			this->pictureBox2->BackColor = System::Drawing::Color::Black;
-			this->pictureBox2->Location = System::Drawing::Point(12, 310);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(30, 40);
-			this->pictureBox2->TabIndex = 1;
-			this->pictureBox2->TabStop = false;
+			this->actor->BackColor = System::Drawing::Color::Black;
+			this->actor->Location = System::Drawing::Point(12, 310);
+			this->actor->Name = L"actor";
+			this->actor->Size = System::Drawing::Size(30, 40);
+			this->actor->TabIndex = 1;
+			this->actor->TabStop = false;
+			// 
+			// timerMotion
+			// 
+			this->timerMotion->Enabled = true;
+			this->timerMotion->Interval = 10;
+			this->timerMotion->Tick += gcnew System::EventHandler(this, &Stage::timerMotion_Tick);
 			// 
 			// Stage
 			// 
@@ -87,16 +99,100 @@ namespace HiperMariko3D {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(584, 362);
-			this->Controls->Add(this->pictureBox2);
-			this->Controls->Add(this->pictureBox1);
+			this->Controls->Add(this->actor);
+			this->Controls->Add(this->backGround);
 			this->Name = L"Stage";
 			this->Text = L"Stage";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->EndInit();
+			this->Load += gcnew System::EventHandler(this, &Stage::Stage_Load);
+			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &Stage::Stage_KeyUp);
+			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Stage::Stage_KeyDown);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->EndInit();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
+	private: char motionFlag;
+	private: char stopFlag;
+	private: char rightMoveFlag;
+	private: char leftMoveFlag;
+	private: char jumpFlag;
+
+	private: bool isJumping;
+	private: int jumpBeginHeight;
+	private: int theta;
+
+	private: System::Void Stage_Load(System::Object^  sender, System::EventArgs^  e) {
+				 stopFlag = 0x00;
+				 rightMoveFlag = 0x01;
+				 leftMoveFlag = 0x02;
+				 jumpFlag = 0x04;
+
+				 motionFlag = stopFlag;
+				 isJumping = false;
+				 jumpBeginHeight = 0;
+				 theta = 0;
+			 }
+
+	private: System::Void Stage_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				 Keys keyCode = e->KeyCode;
+				 String^ keyString = keyCode.ToString();
+				 this->Text = keyString;
+
+				 if(keyString == "Right"){
+					 motionFlag |= rightMoveFlag;
+				 } else if(keyString == "Left"){
+					 motionFlag |= leftMoveFlag;
+				 } else if(keyString == "Up"){
+					 motionFlag |= jumpFlag;
+				 }
+			 }
+
+	private: System::Void Stage_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				 Keys keyCode = e->KeyCode;
+				 String^ keyString = keyCode.ToString();
+				 this->Text = "";
+
+				 if(keyString == "Right"){
+					 motionFlag &= ~rightMoveFlag;
+				 } else if(keyString == "Left"){
+					 motionFlag &= ~leftMoveFlag;
+				 } else if(keyString == "Up"){
+					 motionFlag &= ~jumpFlag;
+				 }
+			 }
+
+	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
+				 if((motionFlag & rightMoveFlag) == rightMoveFlag){
+					 actor->Left += 2;
+				 } 
+
+				 if((motionFlag & leftMoveFlag) == leftMoveFlag){
+					 actor->Left -= 2;
+				 } 
+
+				 if((motionFlag & jumpFlag) == jumpFlag){
+					 jumpBeginHeight = actor->Top;
+					 isJumping = true;
+					 theta = 0;
+				 }
+
+				 if(theta >= 90){
+					 jumpBeginHeight = 0;
+					 isJumping = false;
+					 theta = 0;
+				 }else if(isJumping == true){
+					 actor->Top = jumpBeginHeight - Math::Sin(theta*3.14159 / 180) * 100;
+					 theta += 5;
+				 }
+
+				 if(isJumping == false){
+					 actor->Top += 2;
+				 }
+
+				 if(actor->Bottom > backGround->Bottom){
+					 actor->Top = backGround->Bottom - actor->Height;
+				 }
+			 }
 	};
 }
-
