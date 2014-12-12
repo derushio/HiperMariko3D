@@ -1,7 +1,7 @@
 // HiperMariko3D.cpp : メイン プロジェクト ファイルです。
 
 #include "stdafx.h"
-#include "Form1.h"
+#include "Stage.h"
 
 using namespace HiperMariko3D;
 
@@ -13,6 +13,6 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	// メイン ウィンドウを作成して、実行します
-	Application::Run(gcnew Form1());
+	Application::Run(gcnew Stage());
 	return 0;
 }

@@ -11,7 +11,7 @@ namespace HiperMariko3D {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Form1 の概要
+	/// Stage の概要
 	///
 	/// 警告: このクラスの名前を変更する場合、このクラスが依存するすべての .resx ファイルに関連付けられた
 	///          マネージ リソース コンパイラ ツールに対して 'Resource File Name' プロパティを
@@ -19,10 +19,10 @@ namespace HiperMariko3D {
 	///          デザイナと、このフォームに関連付けられたローカライズ済みリソースとが、
 	///          正しく相互に利用できなくなります。
 	/// </summary>
-	public ref class Form1 : public System::Windows::Forms::Form
+	public ref class Stage : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void)
+		Stage(void)
 		{
 			InitializeComponent();
 			//
@@ -34,7 +34,7 @@ namespace HiperMariko3D {
 		/// <summary>
 		/// 使用中のリソースをすべてクリーンアップします。
 		/// </summary>
-		~Form1()
+		~Stage()
 		{
 			if (components)
 			{
@@ -57,7 +57,7 @@ namespace HiperMariko3D {
 		{
 			this->components = gcnew System::ComponentModel::Container();
 			this->Size = System::Drawing::Size(300,300);
-			this->Text = L"Form1";
+			this->Text = L"Stage";
 			this->Padding = System::Windows::Forms::Padding(0);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 		}

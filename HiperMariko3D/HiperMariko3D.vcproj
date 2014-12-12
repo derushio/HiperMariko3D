@@ -230,18 +230,18 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Form1.h"
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Stage.h"
 				FileType="3"
 				>
 				<File
-					RelativePath=".\Form1.resX"
+					RelativePath=".\Stage.resX"
 					SubType="Designer"
 					>
 				</File>
-			</File>
-			<File
-				RelativePath=".\resource.h"
-				>
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
