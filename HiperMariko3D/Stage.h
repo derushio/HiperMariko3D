@@ -112,11 +112,14 @@ namespace HiperMariko3D {
 
 		}
 #pragma endregion
-	private: char motionFlag;
+	private: char motionFlag; // MotionBitField
+
+			 // Motion Flags
 	private: char stopFlag;
 	private: char rightMoveFlag;
 	private: char leftMoveFlag;
 	private: char jumpFlag;
+			 // Motion Flags
 
 	private: bool isJumping;
 	private: int jumpBeginHeight;
@@ -163,6 +166,10 @@ namespace HiperMariko3D {
 			 }
 
 	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
+				 if(isJumping){
+					 motionFlag &= ~jumpFlag;
+				 }
+
 				 if((motionFlag & rightMoveFlag) == rightMoveFlag){
 					 actor->Left += 2;
 				 } 
