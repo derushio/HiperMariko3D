@@ -45,7 +45,7 @@ namespace HiperMariko3D {
 	private: System::Windows::Forms::Label^  label1;
 	protected: 
 	private: System::Windows::Forms::Button^  button1;
-	private: System::IO::Ports::SerialPort^  serialPort1;
+
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -61,10 +61,8 @@ namespace HiperMariko3D {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = (gcnew System::ComponentModel::Container());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->serialPort1 = (gcnew System::IO::Ports::SerialPort(this->components));
 			this->SuspendLayout();
 			// 
 			// label1
@@ -90,11 +88,6 @@ namespace HiperMariko3D {
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &Title::button1_Click);
 			// 
-			// serialPort1
-			// 
-			this->serialPort1->BaudRate = 19200;
-			this->serialPort1->DataReceived += gcnew System::IO::Ports::SerialDataReceivedEventHandler(this, &Title::serialPort1_DataReceived);
-			// 
 			// Title
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -104,45 +97,15 @@ namespace HiperMariko3D {
 			this->Controls->Add(this->label1);
 			this->Name = L"Title";
 			this->Text = L"Title";
-			this->Load += gcnew System::EventHandler(this, &Title::Title_Load);
-			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &Title::Title_FormClosed);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 
-		delegate void SerialDataReceivedDelegate(String^ receiveData);
-	private: void SerialDataReceived(String^ receiveData){
-				 if(0 < receiveData->IndexOf("3_ON")){
-					 Stage^ stage = gcnew Stage();
-					 serialPort1->Close();
-					 stage->ShowDialog();
-					 serialPort1->Open();
-				 }else if(0 < receiveData->IndexOf("3_OFF")){
-				 }
-			 }
-
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Stage^ stage = gcnew Stage();
-				 try{
-					 serialPort1->Close();
-					 stage->ShowDialog();
-					 serialPort1->Open();
-				 }catch(Exception^ e){
-				 }
-			 }
-
-	private: System::Void serialPort1_DataReceived(System::Object^  sender, System::IO::Ports::SerialDataReceivedEventArgs^  e) {
-				 SerialDataReceivedDelegate^ receiveDelegate = gcnew SerialDataReceivedDelegate(this, &HiperMariko3D::Title::SerialDataReceived);
-				 String^ receiveData = serialPort1->ReadExisting();
-				 this->Invoke(receiveDelegate, receiveData);
-			 }
-	private: System::Void Title_Load(System::Object^  sender, System::EventArgs^  e) {
-				 serialPort1->Open();
-			 }
-	private: System::Void Title_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
-				 serialPort1->Close();
+				 stage->ShowDialog();
 			 }
 	};
 }

@@ -216,6 +216,7 @@ namespace HiperMariko3D {
 
 				 if(0 < receiveData->IndexOf("3_ON")){
 					 this->Close();
+					 return;
 				 }else if(0 < receiveData->IndexOf("3_OFF")){
 				 }
 
