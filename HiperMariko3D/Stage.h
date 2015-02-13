@@ -47,6 +47,8 @@ namespace HiperMariko3D {
 	private: System::Windows::Forms::Timer^  timerMotion;
 	private: System::Windows::Forms::PictureBox^  bottomBlock;
 	private: System::Windows::Forms::PictureBox^  topBlock;
+	private: System::Windows::Forms::Label^  scoreCountLabel;
+
 
 
 
@@ -74,6 +76,7 @@ namespace HiperMariko3D {
 			this->timerMotion = (gcnew System::Windows::Forms::Timer(this->components));
 			this->bottomBlock = (gcnew System::Windows::Forms::PictureBox());
 			this->topBlock = (gcnew System::Windows::Forms::PictureBox());
+			this->scoreCountLabel = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->BeginInit();
@@ -108,6 +111,8 @@ namespace HiperMariko3D {
 			// bottomBlock
 			// 
 			this->bottomBlock->BackColor = System::Drawing::Color::Black;
+			this->bottomBlock->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"bottomBlock.BackgroundImage")));
+			this->bottomBlock->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->bottomBlock->Location = System::Drawing::Point(542, 250);
 			this->bottomBlock->Name = L"bottomBlock";
 			this->bottomBlock->Size = System::Drawing::Size(30, 200);
@@ -117,11 +122,26 @@ namespace HiperMariko3D {
 			// topBlock
 			// 
 			this->topBlock->BackColor = System::Drawing::Color::Black;
+			this->topBlock->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"topBlock.BackgroundImage")));
+			this->topBlock->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->topBlock->Location = System::Drawing::Point(542, -100);
 			this->topBlock->Name = L"topBlock";
 			this->topBlock->Size = System::Drawing::Size(30, 200);
 			this->topBlock->TabIndex = 3;
 			this->topBlock->TabStop = false;
+			// 
+			// scoreCountLabel
+			// 
+			this->scoreCountLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
+			this->scoreCountLabel->AutoSize = true;
+			this->scoreCountLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI Symbol", 14.25F, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)), 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->scoreCountLabel->Location = System::Drawing::Point(491, 12);
+			this->scoreCountLabel->Name = L"scoreCountLabel";
+			this->scoreCountLabel->Size = System::Drawing::Size(81, 25);
+			this->scoreCountLabel->TabIndex = 4;
+			this->scoreCountLabel->Text = L"スコア：0";
+			this->scoreCountLabel->TextAlign = System::Drawing::ContentAlignment::TopRight;
 			// 
 			// Stage
 			// 
@@ -129,6 +149,7 @@ namespace HiperMariko3D {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(584, 362);
+			this->Controls->Add(this->scoreCountLabel);
 			this->Controls->Add(this->topBlock);
 			this->Controls->Add(this->bottomBlock);
 			this->Controls->Add(this->actor);
@@ -143,6 +164,7 @@ namespace HiperMariko3D {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->topBlock))->EndInit();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -158,6 +180,9 @@ namespace HiperMariko3D {
 	private: bool isJumping;
 	private: int jumpBeginHeight;
 	private: int theta;
+	private: int scoreCount;
+
+	private: Random^ random;
 
 	private: System::Void Stage_Load(System::Object^  sender, System::EventArgs^  e) {
 				 stopFlag = 0x00;
@@ -169,6 +194,8 @@ namespace HiperMariko3D {
 				 isJumping = false;
 				 jumpBeginHeight = 0;
 				 theta = 0;
+				 random = gcnew Random();
+				 scoreCount = 0;
 			 }
 
 	private: System::Void Stage_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
@@ -243,20 +270,34 @@ namespace HiperMariko3D {
 				 if(topBlock->Right < backGround->Left){
 					 topBlock->Left += backGround->Right;
 					 bottomBlock->Left += backGround->Right;
+
+					 topBlock->Top = backGround->Top + random->Next(backGround->Height - 150) - topBlock->Height;
+					 bottomBlock->Top = topBlock->Bottom + 150;
+
+					 scoreCount++;
+					 scoreCountLabel->Text = "スコア:" + scoreCount.ToString();
+					 scoreCountLabel->Left = backGround->Right - scoreCountLabel->Width;
 				 }
 			 }
-	private: void collisionCheck(){
+	private: bool collisionCheck(){
 				 if(topBlock->Left < actor->Right && topBlock->Right > actor->Left){
 					 if(topBlock->Bottom > actor->Top || bottomBlock->Top < actor->Bottom){
-						 this->Close();
+						 return true;
 					 }
 				 }
+
+				 return false;
 			 }
 
 	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
 				 charMove();
 				 blockMove();
-				 collisionCheck();
+				 if(collisionCheck()){
+					 scoreCountLabel->Text = "game over";
+					 scoreCountLabel->Left = backGround->Right - scoreCountLabel->Width;
+					
+					 timerMotion->Stop();
+				 }
 			 }
 	};
 }
