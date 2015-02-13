@@ -245,10 +245,18 @@ namespace HiperMariko3D {
 					 bottomBlock->Left += backGround->Right;
 				 }
 			 }
+	private: void collisionCheck(){
+				 if(topBlock->Left < actor->Right && topBlock->Right > actor->Left){
+					 if(topBlock->Bottom > actor->Top || bottomBlock->Top < actor->Bottom){
+						 this->Close();
+					 }
+				 }
+			 }
 
 	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
 				 charMove();
 				 blockMove();
+				 collisionCheck();
 			 }
 	};
 }
