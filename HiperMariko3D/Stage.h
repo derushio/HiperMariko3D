@@ -8,6 +8,7 @@ namespace HiperMariko3D {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO::Ports;
 
 	/// <summary>
 	/// Stage ‚ÌŠT—v
@@ -191,6 +192,33 @@ namespace HiperMariko3D {
 
 	private: Random^ random;
 
+			 delegate void SerialDataReceivedDelegate(String^ receiveData);
+	private: void SerialDataReceived(String^ receiveData){
+				 scoreCountLabel->Text = receiveData;
+				 if(0 < receiveData->IndexOf("1_ON")){
+					 motionFlag |= rightMoveFlag;
+				 }else if(0 < receiveData->IndexOf("1_OFF")){
+					 motionFlag &= ~rightMoveFlag;
+				 }
+
+				 if(0 < receiveData->IndexOf("2_ON")){
+					 motionFlag |= leftMoveFlag;
+				 }else if(0 < receiveData->IndexOf("2_OFF")){
+					 motionFlag &= ~leftMoveFlag;
+				 }
+
+				 if(0 < receiveData->IndexOf("3_ON")){
+					 this->Close();
+				 }else if(0 < receiveData->IndexOf("3_OFF")){
+				 }
+
+				 if(0 < receiveData->IndexOf("4_ON")){
+					 motionFlag |= jumpFlag;
+				 }else if(0 < receiveData->IndexOf("4_OFF")){
+					 motionFlag &= ~jumpFlag;
+				 }
+			 }
+
 	private: System::Void Stage_Load(System::Object^  sender, System::EventArgs^  e) {
 				 stopFlag = 0x00;
 				 rightMoveFlag = 0x01;
@@ -204,6 +232,8 @@ namespace HiperMariko3D {
 				 random = gcnew Random();
 				 scoreCount = 0;
 				 isGameOvered = false;
+
+				 serialPort1->Open();
 			 }
 
 	private: System::Void Stage_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
@@ -319,6 +349,16 @@ namespace HiperMariko3D {
 				 if(isGameOvered){
 					 this->Close();
 				 }
+			 }
+
+	private: System::Void serialPort1_DataReceived(System::Object^  sender, System::IO::Ports::SerialDataReceivedEventArgs^  e) {
+				 SerialDataReceivedDelegate^ receiveDelegate = gcnew SerialDataReceivedDelegate(this, &HiperMariko3D::Stage::SerialDataReceived);
+				 String^ receiveData = serialPort1->ReadExisting();
+				 this->Invoke(receiveDelegate, receiveData);
+			 }
+
+	private: System::Void Stage_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
+				 serialPort1->Close();
 			 }
 	};
 }
