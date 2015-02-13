@@ -45,6 +45,11 @@ namespace HiperMariko3D {
 
 	private: System::Windows::Forms::PictureBox^  actor;
 	private: System::Windows::Forms::Timer^  timerMotion;
+	private: System::Windows::Forms::PictureBox^  bottomBlock;
+	private: System::Windows::Forms::PictureBox^  topBlock;
+
+
+
 	private: System::ComponentModel::IContainer^  components;
 
 	protected: 
@@ -63,11 +68,16 @@ namespace HiperMariko3D {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Stage::typeid));
 			this->backGround = (gcnew System::Windows::Forms::PictureBox());
 			this->actor = (gcnew System::Windows::Forms::PictureBox());
 			this->timerMotion = (gcnew System::Windows::Forms::Timer(this->components));
+			this->bottomBlock = (gcnew System::Windows::Forms::PictureBox());
+			this->topBlock = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->topBlock))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// backGround
@@ -80,10 +90,12 @@ namespace HiperMariko3D {
 			// 
 			// actor
 			// 
-			this->actor->BackColor = System::Drawing::Color::Black;
-			this->actor->Location = System::Drawing::Point(12, 310);
+			this->actor->BackColor = System::Drawing::Color::Transparent;
+			this->actor->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"actor.BackgroundImage")));
+			this->actor->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->actor->Location = System::Drawing::Point(12, 300);
 			this->actor->Name = L"actor";
-			this->actor->Size = System::Drawing::Size(30, 40);
+			this->actor->Size = System::Drawing::Size(50, 50);
 			this->actor->TabIndex = 1;
 			this->actor->TabStop = false;
 			// 
@@ -93,12 +105,32 @@ namespace HiperMariko3D {
 			this->timerMotion->Interval = 10;
 			this->timerMotion->Tick += gcnew System::EventHandler(this, &Stage::timerMotion_Tick);
 			// 
+			// bottomBlock
+			// 
+			this->bottomBlock->BackColor = System::Drawing::Color::Black;
+			this->bottomBlock->Location = System::Drawing::Point(542, 250);
+			this->bottomBlock->Name = L"bottomBlock";
+			this->bottomBlock->Size = System::Drawing::Size(30, 100);
+			this->bottomBlock->TabIndex = 2;
+			this->bottomBlock->TabStop = false;
+			// 
+			// topBlock
+			// 
+			this->topBlock->BackColor = System::Drawing::Color::Black;
+			this->topBlock->Location = System::Drawing::Point(542, 12);
+			this->topBlock->Name = L"topBlock";
+			this->topBlock->Size = System::Drawing::Size(30, 100);
+			this->topBlock->TabIndex = 3;
+			this->topBlock->TabStop = false;
+			// 
 			// Stage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(584, 362);
+			this->Controls->Add(this->topBlock);
+			this->Controls->Add(this->bottomBlock);
 			this->Controls->Add(this->actor);
 			this->Controls->Add(this->backGround);
 			this->Name = L"Stage";
@@ -108,6 +140,8 @@ namespace HiperMariko3D {
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Stage::Stage_KeyDown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->topBlock))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -165,7 +199,7 @@ namespace HiperMariko3D {
 				 }
 			 }
 
-	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
+	private: void charMove(){
 				 if(isJumping){
 					 motionFlag &= ~jumpFlag;
 				 }
@@ -200,6 +234,21 @@ namespace HiperMariko3D {
 				 if(actor->Bottom > backGround->Bottom){
 					 actor->Top = backGround->Bottom - actor->Height;
 				 }
+			 }
+
+	private: void blockMove(){
+				 topBlock->Left -= 4;
+				 bottomBlock->Left -= 4;
+
+				 if(topBlock->Right < backGround->Left){
+					 topBlock->Left += backGround->Right;
+					 bottomBlock->Left += backGround->Right;
+				 }
+			 }
+
+	private: System::Void timerMotion_Tick(System::Object^  sender, System::EventArgs^  e) {
+				 charMove();
+				 blockMove();
 			 }
 	};
 }
