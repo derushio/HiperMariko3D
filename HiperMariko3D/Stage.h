@@ -90,6 +90,7 @@ namespace HiperMariko3D {
 			this->backGround->Size = System::Drawing::Size(560, 338);
 			this->backGround->TabIndex = 0;
 			this->backGround->TabStop = false;
+			this->backGround->Click += gcnew System::EventHandler(this, &Stage::backGround_Click);
 			// 
 			// actor
 			// 
@@ -154,9 +155,14 @@ namespace HiperMariko3D {
 			this->Controls->Add(this->bottomBlock);
 			this->Controls->Add(this->actor);
 			this->Controls->Add(this->backGround);
+			this->MaximizeBox = false;
 			this->Name = L"Stage";
+			this->ShowIcon = false;
+			this->SizeGripStyle = System::Windows::Forms::SizeGripStyle::Hide;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Stage";
 			this->Load += gcnew System::EventHandler(this, &Stage::Stage_Load);
+			this->Click += gcnew System::EventHandler(this, &Stage::Stage_Click);
 			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &Stage::Stage_KeyUp);
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Stage::Stage_KeyDown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->EndInit();
@@ -181,6 +187,7 @@ namespace HiperMariko3D {
 	private: int jumpBeginHeight;
 	private: int theta;
 	private: int scoreCount;
+	private: bool isGameOvered;
 
 	private: Random^ random;
 
@@ -196,6 +203,7 @@ namespace HiperMariko3D {
 				 theta = 0;
 				 random = gcnew Random();
 				 scoreCount = 0;
+				 isGameOvered = false;
 			 }
 
 	private: System::Void Stage_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
@@ -293,10 +301,23 @@ namespace HiperMariko3D {
 				 charMove();
 				 blockMove();
 				 if(collisionCheck()){
-					 scoreCountLabel->Text = "game over";
+					 isGameOvered = true;
+					 scoreCountLabel->Text = "game over\nスコア：" + scoreCount.ToString();
 					 scoreCountLabel->Left = backGround->Right - scoreCountLabel->Width;
-					
+
 					 timerMotion->Stop();
+				 }
+			 }
+
+	private: System::Void Stage_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if(isGameOvered){
+					 this->Close();
+				 }
+			 }
+
+	private: System::Void backGround_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if(isGameOvered){
+					 this->Close();
 				 }
 			 }
 	};

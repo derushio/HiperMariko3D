@@ -223,6 +223,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Title.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="ヘッダー ファイル"
@@ -246,6 +250,15 @@
 			<File
 				RelativePath=".\stdafx.h"
 				>
+			</File>
+			<File
+				RelativePath=".\Title.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\Title.resx"
+					>
+				</File>
 			</File>
 		</Filter>
 		<Filter
