@@ -110,16 +110,16 @@ namespace HiperMariko3D {
 			this->bottomBlock->BackColor = System::Drawing::Color::Black;
 			this->bottomBlock->Location = System::Drawing::Point(542, 250);
 			this->bottomBlock->Name = L"bottomBlock";
-			this->bottomBlock->Size = System::Drawing::Size(30, 100);
+			this->bottomBlock->Size = System::Drawing::Size(30, 200);
 			this->bottomBlock->TabIndex = 2;
 			this->bottomBlock->TabStop = false;
 			// 
 			// topBlock
 			// 
 			this->topBlock->BackColor = System::Drawing::Color::Black;
-			this->topBlock->Location = System::Drawing::Point(542, 12);
+			this->topBlock->Location = System::Drawing::Point(542, -100);
 			this->topBlock->Name = L"topBlock";
-			this->topBlock->Size = System::Drawing::Size(30, 100);
+			this->topBlock->Size = System::Drawing::Size(30, 200);
 			this->topBlock->TabIndex = 3;
 			this->topBlock->TabStop = false;
 			// 
