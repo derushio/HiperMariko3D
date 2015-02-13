@@ -49,6 +49,7 @@ namespace HiperMariko3D {
 	private: System::Windows::Forms::PictureBox^  bottomBlock;
 	private: System::Windows::Forms::PictureBox^  topBlock;
 	private: System::Windows::Forms::Label^  scoreCountLabel;
+	private: System::IO::Ports::SerialPort^  serialPort1;
 
 
 
@@ -78,6 +79,7 @@ namespace HiperMariko3D {
 			this->bottomBlock = (gcnew System::Windows::Forms::PictureBox());
 			this->topBlock = (gcnew System::Windows::Forms::PictureBox());
 			this->scoreCountLabel = (gcnew System::Windows::Forms::Label());
+			this->serialPort1 = (gcnew System::IO::Ports::SerialPort(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->BeginInit();
@@ -144,6 +146,11 @@ namespace HiperMariko3D {
 			this->scoreCountLabel->TabIndex = 4;
 			this->scoreCountLabel->Text = L"スコア：0";
 			this->scoreCountLabel->TextAlign = System::Drawing::ContentAlignment::TopRight;
+			// 
+			// serialPort1
+			// 
+			this->serialPort1->BaudRate = 19200;
+			this->serialPort1->DataReceived += gcnew System::IO::Ports::SerialDataReceivedEventHandler(this, &Stage::serialPort1_DataReceived);
 			// 
 			// Stage
 			// 
