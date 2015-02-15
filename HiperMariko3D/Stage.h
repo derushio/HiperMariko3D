@@ -200,6 +200,7 @@ namespace HiperMariko3D {
 	private: Random^ random;
 
 			 delegate void SerialDataReceivedDelegate(String^ receiveData);
+
 	private: void SerialDataReceived(String^ receiveData){
 				 scoreCountLabel->Text = receiveData;
 				 if(0 < receiveData->IndexOf("1_ON")){
@@ -325,6 +326,7 @@ namespace HiperMariko3D {
 					 scoreCountLabel->Left = backGround->Right - scoreCountLabel->Width;
 				 }
 			 }
+
 	private: bool collisionCheck(){
 				 if(topBlock->Left < actor->Right && topBlock->Right > actor->Left){
 					 if(topBlock->Bottom > actor->Top || bottomBlock->Top < actor->Bottom){
