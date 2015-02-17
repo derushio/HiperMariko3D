@@ -48,6 +48,7 @@ namespace HiperMariko3D {
 	private: System::Windows::Forms::Timer^  timerMotion;
 	private: System::Windows::Forms::PictureBox^  bottomBlock;
 	private: System::Windows::Forms::PictureBox^  topBlock;
+	private: System::Windows::Forms::Timer^  timerAnime;
 	private: System::Windows::Forms::Label^  scoreCountLabel;
 	private: System::IO::Ports::SerialPort^  serialPort1;
 
@@ -79,7 +80,7 @@ namespace HiperMariko3D {
 			this->bottomBlock = (gcnew System::Windows::Forms::PictureBox());
 			this->topBlock = (gcnew System::Windows::Forms::PictureBox());
 			this->scoreCountLabel = (gcnew System::Windows::Forms::Label());
-			this->serialPort1 = (gcnew System::IO::Ports::SerialPort(this->components));
+			this->timerAnime = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->backGround))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->actor))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->bottomBlock))->BeginInit();
@@ -147,10 +148,9 @@ namespace HiperMariko3D {
 			this->scoreCountLabel->Text = L"スコア：0";
 			this->scoreCountLabel->TextAlign = System::Drawing::ContentAlignment::TopRight;
 			// 
-			// serialPort1
+			// timerAnime
 			// 
-			this->serialPort1->BaudRate = 19200;
-			this->serialPort1->DataReceived += gcnew System::IO::Ports::SerialDataReceivedEventHandler(this, &Stage::serialPort1_DataReceived);
+			this->timerAnime->Tick += gcnew System::EventHandler(this, &Stage::timerAnime_Tick);
 			// 
 			// Stage
 			// 
@@ -370,5 +370,9 @@ namespace HiperMariko3D {
 	private: System::Void Stage_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
 				 serialPort1->Close();
 			 }
-	};
+
+	private: System::Void timerAnime_Tick(System::Object^  sender, System::EventArgs^  e) {
+				
+			 }
+};
 }
